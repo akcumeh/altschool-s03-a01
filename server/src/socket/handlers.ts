@@ -21,14 +21,26 @@ const guessSchema = Joi.object({
     guess: Joi.string().min(1).max(100).required(),
 });
 
+function broadcastLobby(io: Server) {
+    const waiting = sessionManager.getAll()
+        .filter(s => s.status === 'waiting')
+        .map(s => s.getPublicState());
+    io.to('lobby').emit('lobby-updated', waiting);
+}
+
 export function registerSocketHandlers(io: Server) {
     io.on('connection', (socket: Socket) => {
+        socket.join('lobby');
+        const waiting = sessionManager.getAll()
+            .filter(s => s.status === 'waiting')
+            .map(s => s.getPublicState());
+        socket.emit('lobby-updated', waiting);
+
         const { playerId, sessionId } = socket.handshake.auth as {
             playerId?: string;
             sessionId?: string;
         };
 
-        // reconnection
         if (playerId && sessionId) {
             const session = sessionManager.get(sessionId);
             const player = session?.players.get(playerId);
@@ -43,7 +55,7 @@ export function registerSocketHandlers(io: Server) {
         // create a new session (become game master)
         socket.on('create-session', (data: { username: string }) => {
             const { error } = Joi.object({ username: Joi.string().min(2).max(20).required() }).validate(data);
-            if (error) return socket.emit('error', error.message);
+            if (error) return socket.emit('game-error', { message: error.message });
 
             const session = sessionManager.create();
             const player = new Player(data.username, socket.id);
@@ -68,16 +80,17 @@ export function registerSocketHandlers(io: Server) {
 
             socket.emit('session-created', { sessionId: session.id, playerId: player.id, player: player.toJSON() });
             io.to(session.id).emit('session-updated', session.getPublicState());
+            broadcastLobby(io);
         });
 
         // join existing session
         socket.on('join-session', (data: { username: string; sessionId: string }) => {
             const { error } = joinSchema.validate(data);
-            if (error) return socket.emit('error', error.message);
+            if (error) return socket.emit('game-error', { message: error.message });
 
             const session = sessionManager.get(data.sessionId);
-            if (!session) return socket.emit('error', 'Session not found');
-            if (session.status === 'in-progress') return socket.emit('error', 'Game already in progress');
+            if (!session) return socket.emit('game-error', { message: 'Session not found' });
+            if (session.status === 'in-progress') return socket.emit('game-error', { message: 'Game already in progress' });
 
             const player = new Player(data.username, socket.id);
             session.addPlayer(player);
@@ -85,18 +98,19 @@ export function registerSocketHandlers(io: Server) {
 
             socket.emit('session-joined', { sessionId: session.id, playerId: player.id, player: player.toJSON() });
             io.to(session.id).emit('session-updated', session.getPublicState());
+            broadcastLobby(io);
         });
 
         // game master sets the question
         socket.on('set-question', (data: { sessionId: string; question: string; answer: string; playerId: string }) => {
             const { error } = questionSchema.validate(data);
-            if (error) return socket.emit('error', error.message);
+            if (error) return socket.emit('game-error', { message: error.message });
 
             const session = sessionManager.get(data.sessionId);
-            if (!session) return socket.emit('error', 'Session not found');
+            if (!session) return socket.emit('game-error', { message: 'Session not found' });
 
             const ok = session.setQuestion(data.question, data.answer, data.playerId);
-            if (!ok) return socket.emit('error', 'Only the game master can set a question');
+            if (!ok) return socket.emit('game-error', { message: 'Only the game master can set a question' });
 
             socket.emit('question-set', { success: true });
         });
@@ -104,10 +118,10 @@ export function registerSocketHandlers(io: Server) {
         // game master starts the game
         socket.on('start-game', (data: { sessionId: string; playerId: string }) => {
             const session = sessionManager.get(data.sessionId);
-            if (!session) return socket.emit('error', 'Session not found');
+            if (!session) return socket.emit('game-error', { message: 'Session not found' });
 
             const ok = session.start(data.playerId);
-            if (!ok) return socket.emit('error', 'Cannot start: need 3+ players, a question, and you must be game master');
+            if (!ok) return socket.emit('game-error', { message: 'Cannot start: need 3+ players, a question, and you must be game master' });
 
             io.to(session.id).emit('game-started', session.getPublicState());
 
@@ -122,22 +136,30 @@ export function registerSocketHandlers(io: Server) {
         // player submits a guess
         socket.on('guess', (data: { sessionId: string; playerId: string; guess: string }) => {
             const { error } = guessSchema.validate(data);
-            if (error) return socket.emit('error', error.message);
+            if (error) return socket.emit('game-error', { message: error.message });
 
             const session = sessionManager.get(data.sessionId);
-            if (!session) return socket.emit('error', 'Session not found');
+            if (!session) return socket.emit('game-error', { message: 'Session not found' });
 
             const result = session.guess(data.playerId, data.guess);
 
             if (result === 'correct') {
                 socket.emit('guess-result', { result: 'correct', message: 'You have won!' });
+                io.to(session.id).emit('player-guessed', {
+                    username: Array.from(session.players.values()).find(p => p.id === data.playerId)?.username,
+                    result: 'correct',
+                });
             } else if (result === 'wrong') {
                 const remaining = session.getRemainingAttempts(data.playerId);
                 socket.emit('guess-result', { result: 'wrong', attemptsLeft: remaining });
+                io.to(session.id).emit('player-guessed', {
+                    username: Array.from(session.players.values()).find(p => p.id === data.playerId)?.username,
+                    result: 'wrong',
+                });
             } else if (result === 'no-attempts') {
                 socket.emit('guess-result', { result: 'no-attempts', message: 'No attempts remaining' });
             } else {
-                socket.emit('error', 'You cannot guess right now');
+                socket.emit('game-error', { message: 'You cannot guess right now' });
             }
         });
 
@@ -153,6 +175,7 @@ export function registerSocketHandlers(io: Server) {
                 if (session.players.size === 0) {
                     sessionManager.delete(session.id);
                 }
+                broadcastLobby(io);
             });
         });
     });

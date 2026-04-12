@@ -4,7 +4,7 @@
     "description": "A guessing game.",
     "main": "index.js",
     "scripts": {
-        "dev": "tsx watch src/index.ts",
+        "dev": "tsx watch src/index.ts --host",
         "build": "tsc",
         "start": "node dist/index.js"
     },
@@ -20,15 +20,13 @@
         "helmet": "^8.1.0",
         "joi": "^18.1.2",
         "morgan": "^1.10.1",
-        "socket.io": "^4.8.3",
-        "uuid": "^13.0.0"
+        "socket.io": "^4.8.3"
     },
     "devDependencies": {
         "@types/cors": "^2.8.19",
         "@types/express": "^5.0.6",
         "@types/morgan": "^1.9.10",
         "@types/node": "^25.6.0",
-        "@types/uuid": "^10.0.0",
         "tsx": "^4.21.0",
         "typescript": "^6.0.2"
     }
