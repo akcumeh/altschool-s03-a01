@@ -1,0 +1,83 @@
+.game-page {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  max-width: 960px;
+  margin: 0 auto;
+  padding: var(--space-4) var(--space-5);
+  width: 100%;
+  gap: var(--space-4);
+}
+
+.game-page__timer-bar {
+  /* Timer is always visible at the top */
+}
+
+.game-page__body {
+  display: grid;
+  grid-template-columns: 1fr 220px;
+  gap: var(--space-4);
+  flex: 1;
+  align-items: start;
+}
+
+.game-page__main {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.game-page__loading {
+  background: var(--color-primary);
+  border-radius: var(--radius-lg);
+  padding: var(--space-7) var(--space-6);
+  text-align: center;
+  color: rgba(255,255,255,0.7);
+  font-size: 18px;
+  font-style: italic;
+}
+
+.game-page__gm-note {
+  background: linear-gradient(135deg, var(--color-warning) 0%, #f0b429 100%);
+  border-radius: var(--radius-md);
+  padding: var(--space-4) var(--space-5);
+  font-size: 16px;
+  font-weight: 700;
+  color: #1a1a2e;
+  text-align: center;
+  box-shadow: var(--shadow-sm);
+}
+
+.game-page__sidebar {
+  position: sticky;
+  top: var(--space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.game-page__my-score {
+  background: var(--color-surface);
+  border-radius: var(--radius-md);
+  padding: var(--space-3) var(--space-4);
+  font-size: 14px;
+  color: var(--color-text-muted);
+  border: 1px solid var(--color-border);
+  text-align: center;
+}
+
+.game-page__my-score strong {
+  color: var(--color-primary);
+  font-size: 18px;
+  font-weight: 800;
+}
+
+@media (max-width: 768px) {
+  .game-page__body {
+    grid-template-columns: 1fr;
+  }
+  .game-page__sidebar {
+    position: static;
+    order: -1;
+  }
+}

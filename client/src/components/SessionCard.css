@@ -1,0 +1,59 @@
+.session-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--color-surface);
+  border-radius: var(--radius-md);
+  padding: var(--space-4) var(--space-5);
+  border: 1px solid var(--color-border);
+  border-left: 5px solid var(--player-1);
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.session-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.session-card__info {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.session-card__host {
+  font-weight: 700;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.session-card__crown {
+  color: var(--color-warning);
+}
+
+.session-card__players {
+  font-size: 13px;
+  color: var(--color-text-muted);
+}
+
+.session-card__btn {
+  padding: var(--space-2) var(--space-5);
+  background: var(--color-primary);
+  color: var(--color-text-inverse);
+  border-radius: var(--radius-pill);
+  font-size: 14px;
+  font-weight: 700;
+  transition: background 0.15s ease, transform 0.1s ease;
+}
+
+.session-card__btn:hover {
+  background: var(--color-primary-light);
+  transform: scale(1.04);
+}
+
+.session-card__btn:active {
+  transform: scale(0.98);
+}

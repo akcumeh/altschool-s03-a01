@@ -14,6 +14,7 @@ const questionSchema = Joi.object({
     sessionId: Joi.string().uuid().required(),
     question: Joi.string().min(1).max(200).required(),
     answer: Joi.string().min(1).max(100).required(),
+    playerId: Joi.string().uuid().required(),
 });
 
 const guessSchema = Joi.object({
