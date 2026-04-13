@@ -6,15 +6,15 @@ import GamePage from './pages/GamePage';
 import ResultsPage from './pages/ResultsPage';
 
 export default function App() {
-  return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/sessions" element={<LobbyListPage />} />
-        <Route path="/lobby/:sessionId" element={<LobbyPage />} />
-        <Route path="/game/:sessionId" element={<GamePage />} />
-        <Route path="/results/:sessionId" element={<ResultsPage />} />
-      </Routes>
-    </BrowserRouter>
-  );
+    return (
+        <BrowserRouter>
+            <Routes>
+                <Route path="/" element={<HomePage />} />
+                <Route path="/sessions" element={<LobbyListPage />} />
+                <Route path="/lobby/:sessionId" element={<LobbyPage />} />
+                <Route path="/game/:sessionId" element={<GamePage />} />
+                <Route path="/results/:sessionId" element={<ResultsPage />} />
+            </Routes>
+        </BrowserRouter>
+    );
 }

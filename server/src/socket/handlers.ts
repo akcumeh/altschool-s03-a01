@@ -20,7 +20,9 @@ const questionSchema = Joi.object({
 const guessSchema = Joi.object({
     sessionId: Joi.string().uuid().required(),
     guess: Joi.string().min(1).max(100).required(),
+    playerId: Joi.string().uuid().required(),
 });
+
 
 function broadcastLobby(io: Server) {
     const waiting = sessionManager.getAll()
@@ -53,7 +55,6 @@ export function registerSocketHandlers(io: Server) {
             }
         }
 
-        // create a new session (become game master)
         socket.on('create-session', (data: { username: string }) => {
             const { error } = Joi.object({ username: Joi.string().min(2).max(20).required() }).validate(data);
             if (error) return socket.emit('game-error', { message: error.message });
@@ -72,6 +73,11 @@ export function registerSocketHandlers(io: Server) {
                     players: Array.from(s.players.values()).map(p => p.toJSON()),
                 });
 
+                setTimeout(() => {
+                    io.to(s.id).emit('session-updated', s.getPublicState());
+                    broadcastLobby(io);
+                }, 500);
+
                 await supabase.from('sessions').upsert({
                     id: s.id,
                     status: 'ended',
@@ -84,7 +90,6 @@ export function registerSocketHandlers(io: Server) {
             broadcastLobby(io);
         });
 
-        // join existing session
         socket.on('join-session', (data: { username: string; sessionId: string }) => {
             const { error } = joinSchema.validate(data);
             if (error) return socket.emit('game-error', { message: error.message });
@@ -102,7 +107,6 @@ export function registerSocketHandlers(io: Server) {
             broadcastLobby(io);
         });
 
-        // game master sets the question
         socket.on('set-question', (data: { sessionId: string; question: string; answer: string; playerId: string }) => {
             const { error } = questionSchema.validate(data);
             if (error) return socket.emit('game-error', { message: error.message });
@@ -116,7 +120,6 @@ export function registerSocketHandlers(io: Server) {
             socket.emit('question-set', { success: true });
         });
 
-        // game master starts the game
         socket.on('start-game', (data: { sessionId: string; playerId: string }) => {
             const session = sessionManager.get(data.sessionId);
             if (!session) return socket.emit('game-error', { message: 'Session not found' });
@@ -134,7 +137,6 @@ export function registerSocketHandlers(io: Server) {
             }, 1000);
         });
 
-        // player submits a guess
         socket.on('guess', (data: { sessionId: string; playerId: string; guess: string }) => {
             const { error } = guessSchema.validate(data);
             if (error) return socket.emit('game-error', { message: error.message });
@@ -164,7 +166,11 @@ export function registerSocketHandlers(io: Server) {
             }
         });
 
-        // player leaves
+        socket.on('get-session', (data: { sessionId: string }) => {
+            const session = sessionManager.get(data.sessionId);
+            if (session) socket.emit('session-updated', session.getPublicState());
+        });
+
         socket.on('disconnect', () => {
             sessionManager.getAll().forEach(session => {
                 const player = Array.from(session.players.values()).find(p => p.socketId === socket.id);

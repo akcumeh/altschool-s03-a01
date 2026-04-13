@@ -1,138 +1,134 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
 
 :root {
-  --color-bg: #f0f0f5;
-  --color-surface: #ffffff;
-  --color-surface-alt: #f7f7fb;
-  --color-border: #e0e0eb;
+    --color-bg: #f0f0f5;
+    --color-surface: #ffffff;
+    --color-surface-alt: #f7f7fb;
+    --color-border: #e0e0eb;
 
-  --color-primary: #46178f;
-  --color-primary-light: #7b2fbe;
-  --color-accent: #ff3355;
-  --color-success: #26890c;
-  --color-warning: #f5a623;
-  --color-info: #1368ce;
+    --color-primary: #46178f;
+    --color-primary-light: #7b2fbe;
+    --color-accent: #ff3355;
+    --color-success: #26890c;
+    --color-warning: #f5a623;
+    --color-info: #1368ce;
 
-  --color-text: #1a1a2e;
-  --color-text-muted: #6b6b8a;
-  --color-text-inverse: #ffffff;
+    --color-text: #1a1a2e;
+    --color-text-muted: #6b6b8a;
+    --color-text-inverse: #ffffff;
 
-  --player-1: #e21b3c;
-  --player-2: #1368ce;
-  --player-3: #26890c;
-  --player-4: #f5a623;
-  --player-5: #46178f;
-  --player-6: #00b4d8;
+    --player-1: #e21b3c;
+    --player-2: #1368ce;
+    --player-3: #26890c;
+    --player-4: #f5a623;
+    --player-5: #46178f;
+    --player-6: #00b4d8;
 
-  --font: 'Inter', sans-serif;
+    --font: 'Inter', sans-serif;
 
-  --space-1: 4px;
-  --space-2: 8px;
-  --space-3: 12px;
-  --space-4: 16px;
-  --space-5: 24px;
-  --space-6: 32px;
-  --space-7: 48px;
-  --space-8: 64px;
+    --space-1: 4px;
+    --space-2: 8px;
+    --space-3: 12px;
+    --space-4: 16px;
+    --space-5: 24px;
+    --space-6: 32px;
+    --space-7: 48px;
+    --space-8: 64px;
 
-  --radius-sm: 8px;
-  --radius-md: 12px;
-  --radius-lg: 20px;
-  --radius-pill: 999px;
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 20px;
+    --radius-pill: 999px;
 
-  --shadow-sm: 0 2px 8px rgba(0,0,0,0.08);
-  --shadow-md: 0 4px 16px rgba(0,0,0,0.12);
-  --shadow-lg: 0 8px 32px rgba(0,0,0,0.16);
+    --shadow-sm: 0 2px 8px rgba(0,0,0,0.08);
+    --shadow-md: 0 4px 16px rgba(0,0,0,0.12);
+    --shadow-lg: 0 8px 32px rgba(0,0,0,0.16);
 }
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 body {
-  font-family: var(--font);
-  background: var(--color-bg);
-  color: var(--color-text);
-  min-height: 100vh;
-  -webkit-font-smoothing: antialiased;
+    font-family: var(--font);
+    background: var(--color-bg);
+    color: var(--color-text);
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
 }
 
 #root { min-height: 100vh; display: flex; flex-direction: column; }
 
 button {
-  font-family: var(--font);
-  cursor: pointer;
-  border: none;
-  outline: none;
+    font-family: var(--font);
+    cursor: pointer;
+    border: none;
+    outline: none;
 }
 
 input {
-  font-family: var(--font);
-  outline: none;
+    font-family: var(--font);
+    outline: none;
 }
 
-/* ── Shared utility classes ─────────────────────────────────── */
-
 .page-fade-in {
-  animation: pageIn 0.22s ease both;
+    animation: pageIn 0.25s ease both;
 }
 
 @keyframes pageIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to   { opacity: 1; transform: translateY(0); }
+    from { opacity: 0; transform: translateY(10px); }
+    to   { opacity: 1; transform: translateY(0); }
 }
 
 .btn {
-  font-family: var(--font);
-  cursor: pointer;
-  border: none;
-  border-radius: var(--radius-md);
-  font-size: 15px;
-  font-weight: 700;
-  padding: var(--space-3) var(--space-5);
-  transition: background 0.15s ease, transform 0.1s ease, box-shadow 0.15s ease;
+    font-family: var(--font);
+    cursor: pointer;
+    border: none;
+    border-radius: var(--radius-md);
+    font-size: 15px;
+    font-weight: 700;
+    padding: var(--space-3) var(--space-5);
+    transition: background 0.15s ease, transform 0.1s ease, box-shadow 0.15s ease;
 }
 
 .btn--primary {
-  background: var(--color-primary);
-  color: var(--color-text-inverse);
-  box-shadow: var(--shadow-sm);
+    background: var(--color-primary);
+    color: var(--color-text-inverse);
+    box-shadow: var(--shadow-sm);
 }
 
 .btn--primary:hover:not(:disabled) {
-  background: var(--color-primary-light);
-  transform: translateY(-1px);
-  box-shadow: var(--shadow-md);
+    background: var(--color-primary-light);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
 }
 
 .btn--primary:active:not(:disabled) {
-  transform: translateY(0);
+    transform: translateY(0);
 }
 
 .btn--primary:disabled {
-  opacity: 0.45;
-  cursor: not-allowed;
+    opacity: 0.45;
+    cursor: not-allowed;
 }
 
 .btn--outline {
-  background: transparent;
-  color: var(--color-primary);
-  border: 2px solid var(--color-primary);
+    background: transparent;
+    color: var(--color-primary);
+    border: 2px solid var(--color-primary);
 }
 
 .btn--outline:hover {
-  background: rgba(70, 23, 143, 0.06);
-  transform: translateY(-1px);
+    background: rgba(70, 23, 143, 0.06);
+    transform: translateY(-1px);
 }
 
 .btn--outline:active {
-  transform: translateY(0);
+    transform: translateY(0);
 }
 
-/* ── Responsive container ───────────────────────────────────── */
-
 .page-container {
-  flex: 1;
-  width: 100%;
-  max-width: 960px;
-  margin: 0 auto;
-  padding: var(--space-5);
+    flex: 1;
+    width: 100%;
+    max-width: 960px;
+    margin: 0 auto;
+    padding: var(--space-5);
 }

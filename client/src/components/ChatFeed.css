@@ -1,76 +1,76 @@
 .chat-feed {
-  flex: 1;
-  overflow-y: auto;
-  padding: var(--space-4);
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-2);
-  background: var(--color-surface);
-  border-radius: var(--radius-md);
-  border: 1px solid var(--color-border);
-  min-height: 200px;
-  max-height: 420px;
+    flex: 1;
+    overflow-y: auto;
+    padding: var(--space-4);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    background: var(--color-surface);
+    border-radius: var(--radius-md);
+    border: 1px solid var(--color-border);
+    min-height: 200px;
+    max-height: 420px;
 }
 
 .chat-feed__empty {
-  color: var(--color-text-muted);
-  font-style: italic;
-  text-align: center;
-  margin: auto;
-  font-size: 14px;
+    color: var(--color-text-muted);
+    font-style: italic;
+    text-align: center;
+    margin: auto;
+    font-size: 14px;
 }
 
 .chat-msg {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  padding: var(--space-2) var(--space-3);
-  border-radius: var(--radius-sm);
-  font-size: 14px;
-  line-height: 1.4;
-  animation: msgIn 0.18s ease;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    padding: var(--space-2) var(--space-3);
+    border-radius: var(--radius-sm);
+    font-size: 14px;
+    line-height: 1.4;
+    animation: msgIn 0.18s ease;
 }
 
 @keyframes msgIn {
-  from { opacity: 0; transform: translateY(4px); }
-  to   { opacity: 1; transform: translateY(0); }
+    from { opacity: 0; transform: translateY(4px); }
+    to   { opacity: 1; transform: translateY(0); }
 }
 
 .chat-msg--system {
-  color: var(--color-text-muted);
-  font-style: italic;
-  text-align: center;
-  background: transparent;
+    color: var(--color-text-muted);
+    font-style: italic;
+    text-align: center;
+    background: transparent;
 }
 
 .chat-msg--info {
-  background: rgba(19, 104, 206, 0.07);
-  border-left: 3px solid var(--color-info);
-  color: var(--color-info);
+    background: rgba(19, 104, 206, 0.07);
+    border-left: 3px solid var(--color-info);
+    color: var(--color-info);
 }
 
 .chat-msg--guess {
-  background: var(--color-surface-alt);
-  border: 1px solid var(--color-border);
+    background: var(--color-surface-alt);
+    border: 1px solid var(--color-border);
 }
 
 .chat-msg--correct {
-  background: rgba(38, 137, 12, 0.1);
-  border-left: 3px solid var(--color-success);
-  color: var(--color-success);
-  font-weight: 600;
+    background: rgba(38, 137, 12, 0.1);
+    border-left: 3px solid var(--color-success);
+    color: var(--color-success);
+    font-weight: 600;
 }
 
 .chat-msg--wrong {
-  background: rgba(255, 51, 85, 0.07);
-  border-left: 3px solid var(--color-accent);
-  color: var(--color-accent);
+    background: rgba(255, 51, 85, 0.07);
+    border-left: 3px solid var(--color-accent);
+    color: var(--color-accent);
 }
 
 .chat-msg__username {
-  font-weight: 600;
-  font-size: 12px;
-  color: var(--color-primary);
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
+    font-weight: 600;
+    font-size: 12px;
+    color: var(--color-primary);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
