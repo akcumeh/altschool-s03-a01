@@ -1,6 +1,7 @@
 import { Player } from './Player';
 
 type SessionStatus = 'waiting' | 'in-progress' | 'ended';
+type GuessType = 'correct' | 'wrong' | 'no-attempts' | 'not-allowed';
 
 export class GameSession {
     id: string;
@@ -13,7 +14,7 @@ export class GameSession {
     private attempts: Map<string, number>;
     private timer: ReturnType<typeof setTimeout> | null;
     onEnd: ((session: GameSession, winnerId: string | null) => void) | null;
-
+    
     constructor() {
         this.id = crypto.randomUUID();
         this.status = 'waiting';
@@ -29,7 +30,7 @@ export class GameSession {
 
     addPlayer(player: Player): void {
         if (this.players.size === 0) {
-            player.isGameMaster = true;
+            player.setAsGameMaster();
             this.gameMasterId = player.id;
         }
         this.players.set(player.id, player);
@@ -42,14 +43,16 @@ export class GameSession {
 
         if (playerId === this.gameMasterId && this.joinOrder.length > 0) {
             this.promoteNextGameMaster();
+        } else if (playerId === this.gameMasterId && this.joinOrder.length === 0) {
+            this.end(null);
         }
     }
 
     private promoteNextGameMaster(): void {
         const nextId = this.joinOrder[0];
         const nextPlayer = this.players.get(nextId);
-        if (!nextPlayer) return;
-        nextPlayer.isGameMaster = true;
+        if (!nextPlayer) this.end(null);
+        nextPlayer?.setAsGameMaster();
         this.gameMasterId = nextId;
     }
 
@@ -81,7 +84,7 @@ export class GameSession {
         return true;
     }
 
-    guess(playerId: string, guessText: string): 'correct' | 'wrong' | 'no-attempts' | 'not-allowed' {
+    guess(playerId: string, guessText: string): GuessType {
         if (this.status !== 'in-progress') return 'not-allowed';
         if (playerId === this.gameMasterId) return 'not-allowed';
 
@@ -113,7 +116,7 @@ export class GameSession {
 
         if (this.joinOrder.length > 0) {
             const currentGM = this.gameMasterId;
-            this.players.forEach(p => (p.isGameMaster = false));
+            this.players.forEach(p => (p.setAsGameMaster(false)));
             this.gameMasterId = null;
 
             const currentGMIndex = this.joinOrder.indexOf(currentGM!);
@@ -121,7 +124,7 @@ export class GameSession {
             const nextId = this.joinOrder[nextIndex];
             const nextPlayer = this.players.get(nextId);
             if (nextPlayer) {
-                nextPlayer.isGameMaster = true;
+                nextPlayer.setAsGameMaster();
                 this.gameMasterId = nextId;
             }
 

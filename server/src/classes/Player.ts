@@ -13,6 +13,15 @@ export class Player {
         this.isGameMaster = false;
     }
 
+    setAsGameMaster(yes = true) {
+        this.isGameMaster = yes;
+    }
+
+    setSocketId(socketId: string) {
+        this.socketId = socketId;
+    }
+    
+
     toJSON() {
         return {
             id: this.id,
