@@ -7,6 +7,7 @@ export class GameSession {
     id: string;
     status: SessionStatus;
     players: Map<string, Player>;
+    timerDuration: number;
     private joinOrder: string[];
     private gameMasterId: string | null;
     private question: string | null;
@@ -14,11 +15,12 @@ export class GameSession {
     private attempts: Map<string, number>;
     private timer: ReturnType<typeof setTimeout> | null;
     onEnd: ((session: GameSession, winnerId: string | null) => void) | null;
-    
+
     constructor() {
         this.id = crypto.randomUUID();
         this.status = 'waiting';
         this.players = new Map();
+        this.timerDuration = 60;
         this.joinOrder = [];
         this.gameMasterId = null;
         this.question = null;
@@ -60,11 +62,16 @@ export class GameSession {
         return this.players.size >= 3 && this.status === 'waiting';
     }
 
-    setQuestion(question: string, answer: string, requesterId: string): boolean {
+    setQuestion(question: string, answer: string, requesterId: string, duration = 60): boolean {
         if (requesterId !== this.gameMasterId) return false;
         this.question = question;
         this.answer = answer.toLowerCase().trim();
+        this.timerDuration = Math.min(Math.max(duration, 30), 120);
         return true;
+    }
+
+    getTimerDuration(): number {
+        return this.timerDuration;
     }
 
     start(requesterId: string): boolean {
@@ -79,7 +86,7 @@ export class GameSession {
 
         this.timer = setTimeout(() => {
             this.end(null);
-        }, 60000);
+        }, (this.timerDuration + 3) * 1000);
 
         return true;
     }
@@ -143,6 +150,7 @@ export class GameSession {
             answer: this.status === 'ended' ? this.answer : null,
             players: Array.from(this.players.values()).map(p => p.toJSON()),
             gameMasterId: this.gameMasterId,
+            timerDuration: this.timerDuration,
         };
     }
 

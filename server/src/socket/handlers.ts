@@ -15,6 +15,7 @@ const questionSchema = Joi.object({
     question: Joi.string().min(1).max(200).required(),
     answer: Joi.string().min(1).max(100).required(),
     playerId: Joi.string().uuid().required(),
+    duration: Joi.number().integer().min(30).max(120).optional(),
 });
 
 const guessSchema = Joi.object({
@@ -146,6 +147,7 @@ export function registerSocketHandlers(io: Server) {
                 question: string;
                 answer: string;
                 playerId: string;
+                duration?: number;
             }) => {
                 const { error } = questionSchema.validate(data);
                 if (error)
@@ -163,6 +165,7 @@ export function registerSocketHandlers(io: Server) {
                     data.question,
                     data.answer,
                     data.playerId,
+                    data.duration ?? 60,
                 );
                 if (!ok)
                     return socket.emit("game-error", {
@@ -194,11 +197,20 @@ export function registerSocketHandlers(io: Server) {
                     session.getPublicState(),
                 );
 
-                let timeLeft = 60;
-                const tick = setInterval(() => {
-                    timeLeft--;
-                    io.to(session.id).emit("timer-tick", { timeLeft });
-                    if (timeLeft <= 0) clearInterval(tick);
+                let countdown = 3;
+                const countdownTick = setInterval(() => {
+                    io.to(session.id).emit("game-countdown", { count: countdown });
+                    countdown--;
+                    if (countdown < 0) {
+                        clearInterval(countdownTick);
+                        const duration = session.getTimerDuration();
+                        let timeLeft = duration;
+                        const tick = setInterval(() => {
+                            timeLeft--;
+                            io.to(session.id).emit("timer-tick", { timeLeft });
+                            if (timeLeft <= 0) clearInterval(tick);
+                        }, 1000);
+                    }
                 }, 1000);
             },
         );
@@ -271,16 +283,15 @@ export function registerSocketHandlers(io: Server) {
                 );
                 if (!player) return;
 
-                session.removePlayer(player.id);
-                io.to(session.id).emit(
-                    "session-updated",
-                    session.getPublicState(),
-                );
-
-                if (session.players.size === 0) {
-                    sessionManager.delete(session.id);
-                }
-                broadcastLobby(io);
+                setTimeout(() => {
+                    if (player.socketId !== socket.id) return;
+                    session.removePlayer(player.id);
+                    io.to(session.id).emit("session-updated", session.getPublicState());
+                    if (session.players.size === 0) {
+                        sessionManager.delete(session.id);
+                    }
+                    broadcastLobby(io);
+                }, 10000);
             });
         });
     });
