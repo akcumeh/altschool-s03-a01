@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import { useGameState } from '../hooks/useGameState';
 import { IconEmojiEvents, IconTimerOff, IconArrowForward, IconArrowBack } from '../components/Icons';
+import Footer from '../components/Footer';
 import type { GameEndedPayload, PlayerData } from '../types/game';
 import './ResultsPage.css';
 
@@ -37,7 +38,7 @@ export default function ResultsPage() {
                 ) : (
                     <>
                         <IconTimerOff size={64} className="results-page__trophy" />
-                        <h1 className="results-page__no-winner">Time's up — no winner!</h1>
+                        <h1 className="results-page__no-winner">Time up, no winner!</h1>
                         {gameEnded && (
                             <p className="results-page__answer">The answer was: <strong>{gameEnded.answer}</strong></p>
                         )}
@@ -80,6 +81,7 @@ export default function ResultsPage() {
                     )
                 )}
             </div>
+            <Footer />
         </div>
     );
 }

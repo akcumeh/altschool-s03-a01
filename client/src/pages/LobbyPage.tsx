@@ -22,6 +22,7 @@ export default function LobbyPage() {
 
     const [question, setQuestion] = useState('');
     const [answer, setAnswer] = useState('');
+    const [duration, setDuration] = useState(60);
     const [startError, setStartError] = useState('');
     const [copied, setCopied] = useState(false);
     const prevPlayerCount = useRef<number>(0);
@@ -82,7 +83,7 @@ export default function LobbyPage() {
             return;
         }
         const playerId = sessionStorage.getItem('playerId')!;
-        socket.emit('set-question', { sessionId, question: question.trim(), answer: answer.trim(), playerId });
+        socket.emit('set-question', { sessionId, question: question.trim(), answer: answer.trim(), playerId, duration });
         socket.once('question-set', () => {
             socket.emit('start-game', { sessionId, playerId });
         });
@@ -169,6 +170,15 @@ export default function LobbyPage() {
                                 value={answer}
                                 onChange={e => setAnswer(e.target.value)}
                                 maxLength={100}
+                            />
+                            <input
+                                className="lobby-page__input"
+                                type="number"
+                                min={30}
+                                max={120}
+                                value={duration}
+                                onChange={e => setDuration(Number(e.target.value))}
+                                placeholder="Round timer in seconds (30-120, default 60)"
                             />
                             {startError && <p className="lobby-page__error">{startError}</p>}
                             {!canStart && (

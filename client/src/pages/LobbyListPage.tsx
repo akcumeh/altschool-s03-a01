@@ -3,6 +3,7 @@ import { useGameState } from '../hooks/useGameState';
 import { getSocket } from '../hooks/useSocket';
 import SessionCard from '../components/SessionCard';
 import { IconArrowBack, IconSportsEsports } from '../components/Icons';
+import Footer from '../components/Footer';
 import type { PlayerData } from '../types/game';
 import './LobbyListPage.css';
 
@@ -62,6 +63,7 @@ export default function LobbyListPage() {
                     ))
                 )}
             </div>
+            <Footer />
         </div>
     );
 }

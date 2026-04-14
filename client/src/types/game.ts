@@ -14,7 +14,10 @@ export interface SessionState {
     answer: string | null;
     players: PlayerData[];
     gameMasterId: string | null;
+    timerDuration?: number;
 }
+
+export interface CountdownPayload { count: number; }
 
 export type MessageType = 'system' | 'guess' | 'correct' | 'wrong' | 'info';
 

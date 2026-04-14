@@ -10,6 +10,7 @@ export function useGameState(_sessionId: string | undefined) {
     const [lastGuessResult, setLastGuessResult] = useState<GuessResult | null>(null);
     const [gameEnded, setGameEnded] = useState<GameEndedPayload | null>(null);
     const [lobbySessions, setLobbySessions] = useState<SessionState[]>([]);
+    const [countdown, setCountdown] = useState<number | null>(null);
 
     const addMessage = useCallback((msg: Omit<ChatMessage, 'id' | 'timestamp'>) => {
         setMessages(prev => [...prev, {
@@ -69,6 +70,10 @@ export function useGameState(_sessionId: string | undefined) {
             setLobbySessions(sessions);
         });
 
+        socket.on('game-countdown', ({ count }: { count: number }) => {
+            setCountdown(count > 0 ? count : null);
+        });
+
         socket.on('player-guessed', ({ username, result }: { username: string; result: 'correct' | 'wrong' }) => {
             addMessage({
                 type: result === 'correct' ? 'correct' : 'guess',
@@ -86,6 +91,7 @@ export function useGameState(_sessionId: string | undefined) {
             socket.off('game-ended');
             socket.off('game-error');
             socket.off('lobby-updated');
+            socket.off('game-countdown');
             socket.off('player-guessed');
         };
     }, [socket, addMessage]);
@@ -94,5 +100,5 @@ export function useGameState(_sessionId: string | undefined) {
     const myPlayer = session?.players.find(p => p.id === myPlayerId) ?? null;
     const isGameMaster = myPlayer?.isGameMaster ?? false;
 
-    return { session, messages, timeLeft, lastGuessResult, gameEnded, addMessage, myPlayerId, myPlayer, isGameMaster, lobbySessions };
+    return { session, messages, timeLeft, lastGuessResult, gameEnded, addMessage, myPlayerId, myPlayer, isGameMaster, lobbySessions, countdown };
 }
