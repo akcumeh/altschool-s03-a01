@@ -77,6 +77,7 @@ export default function HomePage() {
 
     return (
         <div className="home-page page-fade-in">
+            <div className="home-page__center">
             <div className="home-card">
                 <div className="home-card__logo">
                     <IconPersonRaisedHand size={64} className="home-card__logo-icon" />
@@ -112,6 +113,7 @@ export default function HomePage() {
                 </div>
 
                 <p className="home-card__hint">Have a session link? It will join you automatically.</p>
+            </div>
             </div>
             <Footer />
         </div>

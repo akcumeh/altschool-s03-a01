@@ -1,20 +1,20 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
 
 :root {
-    --color-bg: #f0f0f5;
+    --color-bg: #FFEAD8;
     --color-surface: #ffffff;
-    --color-surface-alt: #f7f7fb;
-    --color-border: #e0e0eb;
+    --color-surface-alt: #fff5ee;
+    --color-border: #f0d5c5;
 
-    --color-primary: #46178f;
-    --color-primary-light: #7b2fbe;
+    --color-primary: #9B177E;
+    --color-primary-light: #c0319a;
     --color-accent: #ff3355;
     --color-success: #26890c;
     --color-warning: #f5a623;
     --color-info: #1368ce;
 
-    --color-text: #1a1a2e;
-    --color-text-muted: #6b6b8a;
+    --color-text: #2A1458;
+    --color-text-muted: #8b6b7e;
     --color-text-inverse: #ffffff;
 
     --player-1: #e21b3c;
@@ -117,7 +117,7 @@ input {
 }
 
 .btn--outline:hover {
-    background: rgba(70, 23, 143, 0.06);
+    background: rgba(155, 23, 126, 0.06);
     transform: translateY(-1px);
 }
 

@@ -31,37 +31,39 @@ export default function LobbyListPage() {
 
     return (
         <div className="lobby-list-page page-fade-in">
-            <div className="lobby-list-page__header">
-                <button className="lobby-list-page__back" onClick={() => navigate('/')} aria-label="Back to home">
-                    <IconArrowBack size={20} />
-                    Back
-                </button>
-                <h1 className="lobby-list-page__title">Open Sessions</h1>
-                <p className="lobby-list-page__subtitle">Join a game that's waiting to start</p>
-            </div>
+            <div className="lobby-list-page__inner">
+                <div className="lobby-list-page__header">
+                    <button className="lobby-list-page__back" onClick={() => navigate('/')} aria-label="Back to home">
+                        <IconArrowBack size={20} />
+                        Back
+                    </button>
+                    <h1 className="lobby-list-page__title">Open Sessions</h1>
+                    <p className="lobby-list-page__subtitle">Join a game that's waiting to start</p>
+                </div>
 
-            <div className="lobby-list-page__list">
-                {lobbySessions.length === 0 ? (
-                    <div className="lobby-list-page__empty">
-                        <IconSportsEsports size={48} className="lobby-list-page__empty-icon" />
-                        <p>No open sessions right now.</p>
-                        <p className="lobby-list-page__empty-hint">Go back and create one!</p>
-                    </div>
-                ) : (
-                    lobbySessions.map((s, i) => (
-                        <SessionCard
-                            key={s.id}
-                            session={{
-                                id: s.id,
-                                playerCount: s.players.length,
-                                gameMasterId: s.gameMasterId ?? '',
-                                players: s.players,
-                            }}
-                            onJoin={() => handleJoin(s.id)}
-                            index={i}
-                        />
-                    ))
-                )}
+                <div className="lobby-list-page__list">
+                    {lobbySessions.length === 0 ? (
+                        <div className="lobby-list-page__empty">
+                            <IconSportsEsports size={48} className="lobby-list-page__empty-icon" />
+                            <p>No open sessions right now.</p>
+                            <p className="lobby-list-page__empty-hint">Go back and create one!</p>
+                        </div>
+                    ) : (
+                        lobbySessions.map((s, i) => (
+                            <SessionCard
+                                key={s.id}
+                                session={{
+                                    id: s.id,
+                                    playerCount: s.players.length,
+                                    gameMasterId: s.gameMasterId ?? '',
+                                    players: s.players,
+                                }}
+                                onJoin={() => handleJoin(s.id)}
+                                index={i}
+                            />
+                        ))
+                    )}
+                </div>
             </div>
             <Footer />
         </div>

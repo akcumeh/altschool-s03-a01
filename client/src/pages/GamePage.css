@@ -75,7 +75,7 @@
 .game-page__countdown-overlay {
     position: fixed;
     inset: 0;
-    background: rgba(70, 23, 143, 0.85);
+    background: rgba(155, 23, 126, 0.85);
     display: flex;
     align-items: center;
     justify-content: center;

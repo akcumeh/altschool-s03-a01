@@ -82,6 +82,10 @@ export default function LobbyPage() {
             setStartError('Please enter both a question and an answer.');
             return;
         }
+        if (duration < 30 || duration > 120) {
+            setStartError('Round timer must be between 30 and 120 seconds.');
+            return;
+        }
         const playerId = sessionStorage.getItem('playerId')!;
         socket.emit('set-question', { sessionId, question: question.trim(), answer: answer.trim(), playerId, duration });
         socket.once('question-set', () => {
@@ -171,15 +175,21 @@ export default function LobbyPage() {
                                 onChange={e => setAnswer(e.target.value)}
                                 maxLength={100}
                             />
-                            <input
-                                className="lobby-page__input"
-                                type="number"
-                                min={30}
-                                max={120}
-                                value={duration}
-                                onChange={e => setDuration(Number(e.target.value))}
-                                placeholder="Round timer in seconds (30-120, default 60)"
-                            />
+                            <div className="lobby-page__field-group">
+                                <label className="lobby-page__field-label" htmlFor="round-timer">
+                                    Round timer (seconds)
+                                </label>
+                                <input
+                                    id="round-timer"
+                                    className="lobby-page__input"
+                                    type="number"
+                                    min={30}
+                                    max={120}
+                                    value={duration}
+                                    onChange={e => setDuration(Number(e.target.value))}
+                                />
+                                <p className="lobby-page__hint">Between 30 and 120 seconds. Default is 60.</p>
+                            </div>
                             {startError && <p className="lobby-page__error">{startError}</p>}
                             {!canStart && (
                                 <p className="lobby-page__hint">

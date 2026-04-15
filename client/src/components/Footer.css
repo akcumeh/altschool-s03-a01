@@ -11,16 +11,15 @@
     margin: 0 auto;
     display: flex;
     align-items: center;
+    justify-content: space-between;
     gap: var(--space-4);
     font-size: 13px;
     color: var(--color-text-muted);
     flex-wrap: wrap;
 }
 
-.app-footer__logo-link {
-    display: flex;
-    align-items: center;
-    text-decoration: none;
+.app-footer__credit {
+    font-weight: 500;
 }
 
 .app-footer__logo {
@@ -30,25 +29,20 @@
     object-fit: cover;
 }
 
-.app-footer__id {
-    font-weight: 600;
-    color: var(--color-primary);
-}
-
 .app-footer__links {
     display: flex;
-    gap: var(--space-3);
-    margin-left: auto;
+    gap: var(--space-2);
+    align-items: center;
 }
 
 .app-footer__links a {
     display: flex;
     align-items: center;
-    gap: var(--space-1);
     color: var(--color-text-muted);
     text-decoration: none;
-    font-weight: 500;
     transition: color 0.15s ease;
+    padding: var(--space-1);
+    border-radius: var(--radius-sm);
 }
 
 .app-footer__links a:hover {
